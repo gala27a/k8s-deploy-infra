@@ -1,0 +1,19 @@
+---
+
+- name: update cache & upgrade base packages
+  ansible.builtin.apt:
+    update_cache: yes
+    upgrade: yes
+    state: latest
+  when: 
+    - ansible_facts['distribution'] == "Ubuntu"
+    - ansible_facts['distribution_version'] == "22.04"
+
+- name: install base packages
+  ansible.builtin.apt:
+    name:
+      - htop
+      - curl
+      - wget
+      - git      
+    state: present
