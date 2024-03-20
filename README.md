@@ -2,9 +2,10 @@
 k8s-deploy-infra
 
 
-##Requirements
+## Requirements
 
 **Ansible host:**
+
 python=3.10
 python3-pip
 ansible=9.3.0
