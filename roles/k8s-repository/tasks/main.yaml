@@ -1,0 +1,46 @@
+---
+
+- name: Install requirements packages for k8s.
+  ansible.builtin.apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+    state: present
+    update_cache: yes
+
+# PGP public key block Public-Key (old) not convert new standard gpg > gpg --dearmor
+- name: Download the public signing key for the Kubernetes package repositories.
+  ansible.builtin.get_url:
+    url: https://pkgs.k8s.io/core:/stable:/{{ k8s_main_ver }}/deb/Release.key
+    dest: /etc/apt/keyrings/kubernetes-apt-keyring.asc
+    mode: '0644'
+
+- name: Add Kubernetes repository 
+  ansible.builtin.apt_repository:
+    repo: 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.asc] https://pkgs.k8s.io/core:/stable:/{{ k8s_main_ver}}/deb/ /'
+    filename: kubernetes.list
+    mode: '0644'
+    update_cache: yes
+
+- name: Install Kubernetes packages - kubelet, kubeadm, kubectl
+  ansible.builtin.apt:
+    name:
+      - kubelet={{ k8s_packages_ver }}
+      - kubeadm={{ k8s_packages_ver }}
+      - kubectl={{ k8s_packages_ver }}
+    state: present
+    update_cache: yes
+
+- name: Lock kubelet, kubeadm, kubectl version packages
+  ansible.builtin.dpkg_selections:
+    name: "{{ item }}"     
+    selection: hold
+  loop:
+    - kubelet
+    - kubeadm
+    - kubectl  
+
+
+

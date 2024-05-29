@@ -1,0 +1,30 @@
+---
+
+- name:  Check swap in fstab 
+  ansible.builtin.shell:
+    cmd: grep swap /etc/fstab |grep -v ^# |awk '{print $1}' 
+  register: swap_path 
+
+- name:  Check swap file is enabled
+  ansible.builtin.shell:
+    cmd: swapon --show |awk 'NR==2'
+  register: swap_check
+
+- name:  Disable swap file 
+  ansible.builtin.shell:
+    cmd: swapoff -a
+  when: swap_check.stdout != ""
+
+- name: Remove swap in fstab
+  ansible.posix.mount:
+    src: "{{ swap_path.stdout }}"
+    path: none
+    fstype: swap
+    opts: sw
+    state: absent
+  when: swap_path.stdout != ""
+
+
+
+
+    
