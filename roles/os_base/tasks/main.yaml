@@ -15,5 +15,7 @@
       - htop
       - curl
       - wget
-      - git      
+      - git
+      - vim
+      - mc      
     state: present
