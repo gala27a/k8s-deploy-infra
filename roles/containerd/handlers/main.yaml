@@ -1,0 +1,11 @@
+---
+
+- name: Systemd daemon_reload
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+
+- name: Restart Continerd
+  ansible.builtin.service:
+    name: containerd
+    enabled: true
+    state: restarted

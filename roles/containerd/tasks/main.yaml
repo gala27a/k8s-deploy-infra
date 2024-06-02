@@ -1,0 +1,47 @@
+---
+
+- name: Check Continerd file exists
+  ansible.builtin.stat:
+    path: /usr/local/bin/containerd 
+  register: containerd_check
+
+- name: Check Continerd service exists
+  ansible.builtin.stat:
+    path: /etc/systemd/system/containerd.service
+  register: containerd_service_check
+
+- name: Download Continerd_ver={{ containerd_ver }}
+  ansible.builtin.unarchive:
+    src: https://github.com/containerd/containerd/releases/download/v{{ containerd_ver }}/containerd-{{ containerd_ver }}-linux-amd64.tar.gz
+    dest: /usr/local
+    remote_src: yes
+  when: containerd_check.stat.exists == false
+
+- name: Get service Continerd
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/containerd/containerd/main/containerd.service
+    dest: /etc/systemd/system/containerd.service
+  when: containerd_service_check.stat.exists == false
+  notify: 
+    - Systemd daemon_reload
+    - Restart Continerd
+
+- name: Create empty file in /etc/containerd/config.toml
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: "{{ item.state }}"
+  loop:
+    - { path: '/etc/containerd', state: 'directory' }
+    - { path: '/etc/containerd/config.toml', state: 'touch' }
+  
+
+
+
+  
+
+
+
+
+
+
+   
