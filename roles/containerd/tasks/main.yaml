@@ -33,6 +33,26 @@
   loop:
     - { path: '/etc/containerd', state: 'directory' }
     - { path: '/etc/containerd/config.toml', state: 'touch' }
+
+- name: Download runc
+  ansible.builtin.get_url:
+    url: https://github.com/opencontainers/runc/releases/download/v{{ runc_ver }}/runc.amd64
+    dest: /usr/local/sbin/runc
+    mode: '0755'
+
+- name: Create CNI directory
+  ansible.builtin.file:
+    path: /opt/cni/bin/
+    state: directory
+
+- name: Download CNI Plugins
+  ansible.builtin.unarchive:
+    src: https://github.com/containernetworking/plugins/releases/download/v{{ cni_ver }}/cni-plugins-linux-amd64-v1.5.0.tgz
+    dest: /opt/cni/bin
+    remote_src: yes
+    owner: root
+    group: root
+    
   
 
 
