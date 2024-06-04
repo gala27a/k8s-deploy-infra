@@ -26,13 +26,23 @@
     - Systemd daemon_reload
     - Restart Continerd
 
-- name: Create empty file in /etc/containerd/config.toml
+- name: Create directory /etc/containerd
   ansible.builtin.file:
-    path: "{{ item.path }}"
-    state: "{{ item.state }}"
-  loop:
-    - { path: '/etc/containerd', state: 'directory' }
-    - { path: '/etc/containerd/config.toml', state: 'touch' }
+    path: /etc/containerd
+    state: directory
+
+- name: Copy default config containerd
+  ansible.builtin.copy:
+    src: containerd-config.toml
+    dest: /etc/containerd/config.toml
+    force: false
+
+- name: Change line SystemdCgroup in containerd config
+  ansible.builtin.lineinfile:
+    path: /etc/containerd/config.toml
+    regexp:  SystemdCgroup = false
+    line:  "            SystemdCgroup = true"
+  notify: Restart Continerd
 
 - name: Download runc
   ansible.builtin.get_url:
