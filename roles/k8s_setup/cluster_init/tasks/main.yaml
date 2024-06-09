@@ -1,0 +1,18 @@
+---
+
+- name: Kubernetes check cluster
+  ansible.builtin.shell:
+    cmd: kubectl cluster-info
+  register: kube_check
+  when: "'k8s_master' in group_names"
+- debug: msg="{{ kube_check.stdout_lines }}"
+  when: "'k8s_master' in group_names"    
+
+- name: Kubernetes control-plane initialization
+  ansible.builtin.shell:
+    cmd: kubeadm init --pod-network-cidr {{ pod_network }} --control-plane-endpoint={{ k8s_cp_endpoint }}
+  register: kube_init_cp
+  when: "'k8s_master' in group_names"
+- debug: msg="{{ kube_init_cp.stdout_lines }}"
+  when: "'k8s_master' in group_names"
+

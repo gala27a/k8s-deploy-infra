@@ -1,0 +1,23 @@
+### Example
+
+[k8s_master]
+k8s_m1 ansible_host=192.168.1.111
+
+[k8s_master_sec]
+k8s_m2 ansible_host=192.168.1.112
+k8s_m3 ansible_host=192.168.1.113
+
+[k8s_control_plain:children]
+k8s_master
+k8s_master_sec
+
+[k8s_worker]
+k8s_w1 ansible_host=192.168.1.121
+k8s_w2 ansible_host=192.168.1.122
+k8s_w3 ansible_host=192.168.1.123
+k8s_w4 ansible_host=192.168.1.124
+
+[k8s_cluster:children]
+k8s_control_plain
+k8s_worker
+
