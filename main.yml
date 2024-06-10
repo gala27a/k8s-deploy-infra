@@ -17,3 +17,9 @@
       vars:
         k8s_cp_endpoint: k-demo
         pod_network: 10.10.0.0/16
+    - role: k8s_setup/control_plain-node
+      vars:
+        k8s_cp_endpoint: k-demo
+    - role: k8s_setup/worker-node
+      vars:
+        k8s_cp_endpoint: k-demo       

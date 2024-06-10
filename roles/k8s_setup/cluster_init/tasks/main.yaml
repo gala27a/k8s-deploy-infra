@@ -5,14 +5,31 @@
     cmd: kubectl cluster-info
   register: kube_check
   when: "'k8s_master' in group_names"
+  ignore_errors: true
 - debug: msg="{{ kube_check.stdout_lines }}"
-  when: "'k8s_master' in group_names"    
+  when: "'k8s_master' in group_names" 
 
 - name: Kubernetes control-plane initialization
   ansible.builtin.shell:
     cmd: kubeadm init --pod-network-cidr {{ pod_network }} --control-plane-endpoint={{ k8s_cp_endpoint }}
   register: kube_init_cp
-  when: "'k8s_master' in group_names"
+  when: "'k8s_master' in group_names and kube_check.rc != 0"
 - debug: msg="{{ kube_init_cp.stdout_lines }}"
-  when: "'k8s_master' in group_names"
+  when: "'k8s_master' in group_names and kube_init_cp.changed"
+
+- name: Create directory for Kubernetes admin config
+  ansible.builtin.file:
+    path: /root/.kube
+    state: directory
+    owner: root
+    group: root
+  when: "'k8s_master' in group_names and kube_init_cp.changed"
+
+- name: Copy Kubernetes admin config
+  ansible.builtin.copy:
+    src: /etc/kubernetes/admin.conf
+    dest: /root/.kube/config
+    remote_src: yes
+  when: "'k8s_master' in group_names and kube_init_cp.changed"
+
 

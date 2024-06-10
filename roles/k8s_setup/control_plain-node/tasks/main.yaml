@@ -1,0 +1,42 @@
+---
+
+- name: Create bootstrap tokens on Kubernetes master node
+  ansible.builtin.command:
+    cmd: kubeadm token create
+  register: kube_token
+  when: "'k8s_master' in group_names"
+- debug: msg="{{ kube_token.stdout }}"
+  when: "'k8s_master' in group_names"
+
+- name: Upload control-plane certificates to the kubeadm-certs Secret
+  ansible.builtin.shell:
+    cmd: kubeadm init phase upload-certs --upload-certs | awk 'NR==3'
+  register: kube_cert
+  when: "'k8s_master' in group_names"
+- debug: msg="{{ kube_cert.stdout }}"
+  when: "'k8s_master' in group_names"
+
+- name: Kubernetes CA key hash sha256
+  ansible.builtin.shell:
+    cmd: openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'
+  register: kube_ca_sha256
+  when: "'k8s_master' in group_names"
+- debug: msg="{{ kube_ca_sha256.stdout }}"
+  when: "'k8s_master' in group_names"
+
+- name: Set vars on control-plane node
+  ansible.builtin.set_fact:
+    k8s_token: "{{ kube_token.stdout }}"
+    k8s_cert: "{{ kube_cert.stdout }}"
+    k8s_ca_sha256: "{{ kube_ca_sha256.stdout }}"
+  when: "'k8s_master' in group_names"
+
+- name: Kubernetes join master(control-plane) node to cluser
+  ansible.builtin.shell:
+    cmd: kubeadm join {{ k8s_cp_endpoint }}:6443 --token {{ hostvars['k8s_m1']['k8s_token'] }} --discovery-token-ca-cert-hash sha256:{{ hostvars['k8s_m1']['k8s_ca_sha256'] }} --control-plane --certificate-key {{ hostvars['k8s_m1']['k8s_cert'] }} 
+  register: kube_join
+  when: "'k8s_master_sec' in group_names"
+- debug: msg="{{ kube_join.stdout_lines }}"
+  when: "'k8s_master_sec' in group_names"
+
+
