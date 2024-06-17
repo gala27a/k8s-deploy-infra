@@ -1,0 +1,34 @@
+---
+
+- name: CNI Calico apply in cluster
+  ansible.builtin.shell:
+    cmd: kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/{{ calico_ver }}/manifests/tigera-operator.yaml
+  register: calico_apply
+  when: "'k8s_master' in group_names"
+- debug: msg="{{ calico_apply.stdout_lines }}"
+  when: "'k8s_master' in group_names" 
+
+- name: Get Calico custom-resources
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/projectcalico/calico/{{ calico_ver }}/manifests/custom-resources.yaml
+    dest: /tmp/k8s-calico_custom-resources.yaml
+  when: "'k8s_master' in group_names"
+
+- name: Replace cidr in custom-resources
+  ansible.builtin.lineinfile:
+    path: /tmp/k8s-calico_custom-resources.yaml
+    regexp: '^(\s*){{ item }}:.*'
+    line: '\1{{ item }}: {{ cidr_network }}'
+    backrefs: true
+  register: calico_cr
+  loop: 
+    - cidr  
+  when: "'k8s_master' in group_names"
+
+- name: CNI Calico custom-resources apply
+  ansible.builtin.shell:
+    cmd: kubectl apply -f /tmp/k8s-calico_custom-resources.yaml
+  register: calico_custom_resources
+  when: "'k8s_master' in group_names and calico_cr.changed"
+- debug: msg="{{ calico_custom_resources.stdout_lines }}"
+  when: "'k8s_master' in group_names" 

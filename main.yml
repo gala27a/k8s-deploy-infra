@@ -22,4 +22,8 @@
         k8s_cp_endpoint: k-demo
     - role: k8s_setup/worker-node
       vars:
-        k8s_cp_endpoint: k-demo       
+        k8s_cp_endpoint: k-dem
+    - role: k8s_setup/cni_calico
+      vars: 
+        calico_ver: v3.28.0    
+        cidr_network: 10.10.0.0/16    
