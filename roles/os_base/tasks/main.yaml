@@ -1,5 +1,25 @@
 ---
 
+- name: Set hostname from inventory 
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname }}"
+    use: systemd
+
+- name: Add K8s Endpoint to hosts
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    line: "{{ k8s_cp_endpoint_ip }} {{ k8s_cp_endpoint }}"
+    state: present
+
+- name: Add inventory host for /etc/hosts
+  ansible.builtin.blockinfile:
+    path: /etc/hosts
+    block: |
+      {% for host in groups['all'] %}
+      {{ hostvars[host].ansible_host | default(host) }} {{ hostvars[host].inventory_hostname }}
+      {% endfor %}
+    state: present
+
 - name: update cache & upgrade base packages
   ansible.builtin.apt:
     update_cache: yes
@@ -19,3 +39,14 @@
       - vim
       - mc      
     state: present
+
+- name: Add K8s admin user
+  ansible.builtin.user:
+    name: k8sadmin
+    shell: /bin/bash
+    uid: 2000
+    expires: -1
+    comment: K8s Admin User
+    state: present
+
+
