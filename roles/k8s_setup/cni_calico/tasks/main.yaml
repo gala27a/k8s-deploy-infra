@@ -2,7 +2,7 @@
 
 - name: CNI Calico apply in cluster
   ansible.builtin.shell:
-    cmd: kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/{{ calico_ver }}/manifests/tigera-operator.yaml
+    cmd: kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/{{ calico_ver }}/manifests/tigera-operator.yaml
   register: calico_apply
   when: "'k8s_master' in group_names"
 - debug: msg="{{ calico_apply.stdout_lines }}"

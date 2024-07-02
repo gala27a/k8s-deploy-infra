@@ -3,27 +3,14 @@
   become: yes
   roles:
     - os_base
-    - role: k8s-repository
-      vars:
-        k8s_main_ver: v1.30
-        k8s_packages_ver: 1.30.1-1.1
+    - k8s-repository
     - k8s-pre_requirements
-    - role: containerd
-      vars:
-        containerd_ver: 1.7.17
-        runc_ver: 1.1.12
-        cni_ver: 1.5.0
-    - role: k8s_setup/cluster_init
-      vars:
-        k8s_cp_endpoint: k-demo
-        pod_network: 10.10.0.0/16
-    - role: k8s_setup/control_plain-node
-      vars:
-        k8s_cp_endpoint: k-demo
-    - role: k8s_setup/worker-node
-      vars:
-        k8s_cp_endpoint: k-dem
-    - role: k8s_setup/cni_calico
-      vars: 
-        calico_ver: v3.28.0    
-        cidr_network: 10.10.0.0/16    
+    - containerd
+    - k8s_setup/cluster_init
+    - k8s_setup/control_plain-node
+    - k8s_setup/worker-node
+    - k8s_setup/cni_calico
+    - k8s_setup/lb_metallb
+
+
+### Group Variables --> group_vars/all.yml
