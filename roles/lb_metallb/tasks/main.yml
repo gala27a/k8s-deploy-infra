@@ -1,0 +1,40 @@
+---
+
+- name: MetalLB apply in cluster
+  ansible.builtin.shell:
+    cmd: kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v{{ metallb_ver }}/config/manifests/metallb-native.yaml
+  register: metallb_apply
+  when: "'k8s_master' in group_names"
+- debug: msg="{{ metallb_apply.stdout_lines }}"
+  when: "'k8s_master' in group_names" 
+
+- name: Wait for MetalLB apply 
+  ansible.builtin.pause:
+    seconds: 20
+
+### Do poprawy dest
+- name: MetalLB template IP Pool
+  ansible.builtin.template:
+    src: metallb-ip_pool.yml.j2
+    dest: /tmp/metallb-ip_pool.yml
+
+- name: MetalLB template L2 Advertisement
+  ansible.builtin.template:
+    src: metallb-l2_advertisement.yml.j2
+    dest: /tmp/metallb-l2_advertisement.yml
+
+- name: MetalLB IP Pool manifest apply
+  ansible.builtin.shell:
+    cmd: kubectl apply -f /tmp/metallb-ip_pool.yml
+  register: metallb_pool
+  when: "'k8s_master' in group_names"
+- debug: msg="{{ metallb_pool.stdout_lines }}"
+  when: "'k8s_master' in group_names" 
+
+- name: MetalLB L2 Advertisement manifest apply
+  ansible.builtin.shell:
+    cmd: kubectl apply -f /tmp/metallb-l2_advertisement.yml
+  register: metallb_l2_advertisement
+  when: "'k8s_master' in group_names"
+- debug: msg="{{ metallb_l2_advertisement.stdout_lines }}"
+  when: "'k8s_master' in group_names" 

@@ -10,7 +10,7 @@
     - k8s_setup/control_plain-node
     - k8s_setup/worker-node
     - k8s_setup/cni_calico
-    - k8s_setup/lb_metallb
+    - lb_metallb
 
 
 ### Group Variables --> group_vars/all.yml

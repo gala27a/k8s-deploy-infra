@@ -1,7 +1,7 @@
 ---
 
 - name: Create bootstrap tokens on Kubernetes master node
-  ansible.builtin.command:
+  ansible.builtin.shell:
     cmd: kubeadm token create
   register: kube_token
   when: "'k8s_master' in group_names"
@@ -33,10 +33,29 @@
 
 - name: Kubernetes join Worker(data-plane) node to cluser
   ansible.builtin.shell:
-    cmd: kubeadm join {{ k8s_cp_endpoint }}:6443 --token {{ hostvars['k8s_m1']['k8s_token'] }} --discovery-token-ca-cert-hash sha256:{{ hostvars['k8s_m1']['k8s_ca_sha256'] }}
+    cmd: kubeadm join {{ k8s_cp_endpoint }}:6443 --token {{ hostvars['k8s-m1']['k8s_token'] }} --discovery-token-ca-cert-hash sha256:{{ hostvars['k8s-m1']['k8s_ca_sha256'] }} --certificate-key {{ hostvars['k8s-m1']['k8s_cert'] }} 
   register: kube_join
   when: "'k8s_worker' in group_names"
 - debug: msg="{{ kube_join.stdout_lines }}"
   when: "'k8s_worker' in group_names"
 
+- name: Wait for join worken node in cluser
+  ansible.builtin.pause:
+    seconds: 5
 
+- name: Set fact worker node from inventory
+  ansible.builtin.set_fact:
+    worker_node: "{{ groups['k8s_worker'] }}"
+  when: "'k8s_master' in group_names"
+
+- name: Set label node-role worker
+  ansible.builtin.shell:
+    cmd: kubectl label node {{ item }} node-role.kubernetes.io/worker=worker
+  register: kube_set_label
+  with_items: "{{ worker_node }}"
+  when: "'k8s_master' in group_names" #and kube_join.changed"
+- debug: msg="Label node {{ item.item }} = {{ item.stdout }}"
+  loop: "{{ kube_set_label.results }}"
+  when: "'k8s_master' in group_names"
+  loop_control:
+    label: "{{ item.item }}" 

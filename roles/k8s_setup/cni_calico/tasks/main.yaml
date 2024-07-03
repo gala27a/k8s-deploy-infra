@@ -25,6 +25,10 @@
     - cidr  
   when: "'k8s_master' in group_names"
 
+- name: Wait 5s
+  ansible.builtin.pause:
+    seconds: 5
+
 - name: CNI Calico custom-resources apply
   ansible.builtin.shell:
     cmd: kubectl apply -f /tmp/k8s-calico_custom-resources.yaml
@@ -32,3 +36,7 @@
   when: "'k8s_master' in group_names and calico_cr.changed"
 - debug: msg="{{ calico_custom_resources.stdout_lines }}"
   when: "'k8s_master' in group_names" 
+
+- name: Wait 30s
+  ansible.builtin.pause:
+    seconds: 30
