@@ -21,7 +21,7 @@
 - name: Add Kubernetes repository 
   ansible.builtin.apt_repository:
     repo: 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.asc] https://pkgs.k8s.io/core:/stable:/{{ k8s_main_ver}}/deb/ /'
-    filename: kubernetes.list
+    filename: kubernetes
     mode: '0644'
     update_cache: yes
 

@@ -31,5 +31,3 @@
     dest: /root/.kube/config
     remote_src: yes
   when: "'k8s_master' in group_names and kube_init_cp.changed"
-
-

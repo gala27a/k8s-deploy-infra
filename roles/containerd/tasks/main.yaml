@@ -62,16 +62,9 @@
     remote_src: yes
     owner: root
     group: root
-    
-  
 
-
-
-  
-
-
-
-
-
-
-   
+- name: Start containerd service
+  ansible.builtin.service:
+    name: containerd
+    enabled: true
+    state: started
