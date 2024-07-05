@@ -1,0 +1,13 @@
+---
+
+- name: Ingress NGINX Controller apply in cluster
+  ansible.builtin.shell:
+    cmd: kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-{{ ingress_nginx_ver }}/deploy/static/provider/cloud/deploy.yaml
+  register: ingress_nginx_apply
+  when: "'k8s_master' in group_names"
+- debug: msg="{{ ingress_nginx_apply.stdout_lines }}"
+  when: "'k8s_master' in group_names" 
+
+- name: Wait 15s for Ingress NGINX Controller apply 
+  ansible.builtin.pause:
+    seconds: 15

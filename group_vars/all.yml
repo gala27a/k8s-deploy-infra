@@ -21,3 +21,5 @@ cidr_network: 10.10.0.0/16
 metallb_ver: 0.14.5
 metallb_pool_name: first-pool
 metallb_ip_pool: 192.168.5.201-192.168.5.202
+
+ingress_nginx_ver: v1.10.1
