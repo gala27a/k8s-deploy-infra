@@ -11,7 +11,10 @@
 
 - name: Kubernetes control-plane initialization
   ansible.builtin.shell:
-    cmd: kubeadm init --pod-network-cidr {{ pod_network }} --control-plane-endpoint={{ k8s_cp_endpoint }}
+    cmd: |
+      kubeadm init \
+      --pod-network-cidr {{ pod_network }} \
+      --control-plane-endpoint={{ k8s_cp_endpoint }}
   register: kube_init_cp
   when: "'k8s_master' in group_names and kube_check.rc != 0"
 - debug: msg="{{ kube_init_cp.stdout_lines }}"
@@ -31,3 +34,4 @@
     dest: /root/.kube/config
     remote_src: yes
   when: "'k8s_master' in group_names and kube_init_cp.changed"
+  

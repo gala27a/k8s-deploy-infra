@@ -1,0 +1,27 @@
+---
+
+- name: Check Helm binary exists
+  ansible.builtin.stat:
+    path: /usr/bin/helm
+  register: helm_check
+
+- name: Helm add repo csi-driver-nfs
+  ansible.builtin.shell:
+    cmd: |
+      helm repo add csi-driver-nfs \
+      https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/charts
+  register: add_repo_csi_nfs
+  when: "'k8s_master' in group_names and helm_check.stat.exists == true"
+- debug: msg="{{ add_repo_csi_nfs.stdout_lines }}"
+  when: "'k8s_master' in group_names" 
+
+- name: Helm install csi-driver-nfs
+  ansible.builtin.shell:
+    cmd: |
+      helm install csi-driver-nfs csi-driver-nfs/csi-driver-nfs \
+      --namespace kube-system \
+      --version {{ csi_driver_nfs_ver }}
+  register: csi_nfs_install_helm
+  when: "'k8s_master' in group_names and helm_check.stat.exists == true"
+- debug: msg="{{ csi_nfs_install_helm.stdout_lines }}"
+  when: "'k8s_master' in group_names"

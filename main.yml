@@ -2,17 +2,18 @@
 - hosts: all
   become: yes
   roles:
-    # - os_base
-    # - k8s-repository
+    - os_base
+    - k8s-repository
     - helm
-    # - k8s-pre_requirements
-    # - containerd
-    # - k8s_setup/cluster_init
-    # - k8s_setup/control_plain-node
-    # - k8s_setup/worker-node
-    # - k8s_setup/cni_calico
-    # - lb_metallb
-    # - ingress_nginx_controller
+    - k8s-pre_requirements
+    - containerd
+    - k8s_setup/cluster_init
+    - k8s_setup/control_plain-node
+    - k8s_setup/worker-node
+    - k8s_setup/cni_calico
+    - lb_metallb
+    - ingress_nginx_controller
+    - csi_nfs_driver
 
 
 ### Group Variables --> group_vars/all.yml

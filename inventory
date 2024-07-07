@@ -8,8 +8,8 @@ k8s-m2 ansible_host=192.168.1.112
 k8s-m3 ansible_host=192.168.1.113
 
 [k8s_control_plain:children]
-k8s-master
-k8s-master_sec
+k8s_master
+k8s_master_sec
 
 [k8s_worker]
 k8s-w1 ansible_host=192.168.1.121
