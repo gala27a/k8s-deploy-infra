@@ -1,0 +1,10 @@
+---
+
+- name: Apply Cert-Manager in Cluster 
+  kubernetes.core.k8s:
+    src: https://github.com/cert-manager/cert-manager/releases/download/{{ cert_manager_ver }}/cert-manager.yaml
+    state: present
+  register: cm_reg
+  when: "'k8s_master' in group_names"
+- debug: msg=Changed={{ cm_reg.changed }}
+  when: "'k8s_master' in group_names"
