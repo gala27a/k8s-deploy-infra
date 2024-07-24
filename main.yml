@@ -15,6 +15,7 @@
     - ingress_nginx_controller
     - csi_nfs_driver
     - k8s_apps/cert_manager
+    - k8s_apps/metrics-server
 
 
 ### Group Variables --> group_vars/all.yml

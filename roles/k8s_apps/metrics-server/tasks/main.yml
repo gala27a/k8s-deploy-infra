@@ -1,0 +1,21 @@
+---
+
+- name: Add Metric Server repo in Helm
+  kubernetes.core.helm_repository:
+    repo_name: metrics-server
+    repo_url: https://kubernetes-sigs.github.io/metrics-server/
+    repo_state: present
+  when: "'k8s_master' in group_names"
+
+- name: Install chart Metric Server using Helm
+  kubernetes.core.helm:
+    release_name: metrics-server
+    chart_ref: metrics-server/metrics-server
+    chart_version: "{{ metrics_server_chart_ver }}"
+    release_namespace: kube-system
+    set_values:
+      - value: args="{--kubelet-insecure-tls}"
+        value_type: raw 
+    release_state: present
+    update_repo_cache: true
+  when: "'k8s_master' in group_names"
