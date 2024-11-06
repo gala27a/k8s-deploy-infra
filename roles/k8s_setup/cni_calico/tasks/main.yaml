@@ -37,6 +37,6 @@
 - debug: msg="{{ calico_custom_resources.stdout_lines }}"
   when: "'k8s_master' in group_names" 
 
-- name: Wait 30s
+- name: Wait 60s
   ansible.builtin.pause:
-    seconds: 30
+    seconds: 60

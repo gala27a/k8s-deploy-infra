@@ -11,6 +11,13 @@
     line: "{{ k8s_cp_endpoint_ip }} {{ k8s_cp_endpoint }}"
     state: present
 
+- name: Add hostname localname to /etc/hosts
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    regexp: '^127.0.1.1'
+    line: 127.0.1.1 {{ inventory_hostname }}
+    state: present
+
 - name: Add inventory host for /etc/hosts
   ansible.builtin.blockinfile:
     path: /etc/hosts
@@ -25,9 +32,6 @@
     update_cache: yes
     upgrade: yes
     state: latest
-  when: 
-    - ansible_facts['distribution'] == "Ubuntu"
-    - ansible_facts['distribution_version'] == "22.04"
 
 - name: install base packages
   ansible.builtin.apt:
@@ -37,7 +41,12 @@
       - wget
       - git
       - vim
-      - mc      
+      - mc
+      - tmux
+      - python3-pip
+      - python3-jsonpatch
+      - python3-kubernetes
+      - python3-yaml
     state: present
 
 - name: Add K8s admin user
@@ -48,5 +57,3 @@
     expires: -1
     comment: K8s Admin User
     state: present
-
-

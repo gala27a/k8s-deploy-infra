@@ -33,12 +33,12 @@
 
 - name: Kubernetes join master(control-plane) node to cluser
   ansible.builtin.shell:
-    cmd: |
-      kubeadm join {{ k8s_cp_endpoint }}:6443 \
-      --token {{ hostvars['k8s-m1']['k8s_token'] }} \
-      --discovery-token-ca-cert-hash sha256:{{ hostvars['k8s-m1']['k8s_ca_sha256'] }} \
-      --control-plane \
-      --certificate-key {{ hostvars['k8s-m1']['k8s_cert'] }} 
+    cmd: >
+      kubeadm join {{ k8s_cp_endpoint }}:6443
+      --token {{ hostvars[groups['k8s_master'][0]]['k8s_token'] }}
+      --discovery-token-ca-cert-hash sha256:{{ hostvars[groups['k8s_master'][0]]['k8s_ca_sha256'] }}
+      --control-plane
+      --certificate-key {{ hostvars[groups['k8s_master'][0]]['k8s_cert'] }}
   register: kube_join
   when: "'k8s_master_sec' in group_names"
 - debug: msg="{{ kube_join.stdout_lines }}"
@@ -58,5 +58,3 @@
     dest: /root/.kube/config
     remote_src: yes
   when: "'k8s_master_sec' in group_names and kube_join.changed"
-
-

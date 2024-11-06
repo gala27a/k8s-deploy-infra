@@ -8,9 +8,9 @@
 - debug: msg="{{ metallb_apply.stdout_lines }}"
   when: "'k8s_master' in group_names" 
 
-- name: Wait for MetalLB apply 
+- name: Wait 60s for MetalLB apply 
   ansible.builtin.pause:
-    seconds: 20
+    seconds: 60
 
 ### Do poprawy dest
 - name: MetalLB template IP Pool

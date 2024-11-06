@@ -45,7 +45,6 @@
     - { key: 'net.bridge.bridge-nf-call-iptables', value: '1' }
     - { key: 'net.ipv4.ip_forward', value: '1' }
 
-
-
-
-    
+- name: Reboot after K8s PRE Requiments
+  ansible.builtin.reboot:
+    test_command: uptime
