@@ -22,8 +22,8 @@ Metrics-server           | 0.7.2(Chart 3.12.2) |
 ## Requirements
 
 #### Kubernetes host:
-> Ubuntu Server 22.04.5 LTS (Jammy Jellyfish)
-> Ubuntu Server 24.04.1 LTS (Noble Numbat)
+- Ubuntu Server 22.04.5 LTS (Jammy Jellyfish)
+- Ubuntu Server 24.04.1 LTS (Noble Numbat)
 
 #### Ansible host:
 ```console
