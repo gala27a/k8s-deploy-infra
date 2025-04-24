@@ -1,11 +1,11 @@
 
 
-k8s_main_ver: v1.31
-k8s_packages_ver: 1.31.4*
+k8s_main_ver: v1.32
+k8s_packages_ver: 1.32.4*
 
 
-containerd_ver: 2.0.1
-runc_ver: 1.2.4
+containerd_ver: 2.0.5
+runc_ver: 1.2.6
 cni_ver: 1.6.2
 
 
@@ -14,7 +14,7 @@ k8s_cp_endpoint_ip: 192.168.5.29
 pod_network: 10.10.0.0/16
 
 
-calico_ver: v3.29.1
+calico_ver: v3.29.3
 cidr_network: 10.10.0.0/16    
 
 
@@ -23,11 +23,11 @@ metallb_pool_name: first-pool
 metallb_ip_pool: 192.168.5.201-192.168.5.202
 
 
-ingress_nginx_ver: v1.12.0
+ingress_nginx_ver: v1.12.1
 
-csi_driver_nfs_ver: v4.9.0
+csi_driver_nfs_ver: v4.11.0
 
-cert_manager_ver: v1.16.2
+cert_manager_ver: v1.17.2
 
 metrics_server_ver: v0.7.2
 metrics_server_chart_ver: 3.12.2
