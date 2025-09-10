@@ -3,28 +3,28 @@
 # PGP public key block Public-Key (old) not convert new standard gpg > gpg --dearmor
 - name: Download the public signing key for the Helm package repositories.
   ansible.builtin.get_url:
-    url: https://baltocdn.com/helm/signing.asc
+    url: https://packages.buildkite.com/helm-linux/helm-debian/gpgkey
     dest: /etc/apt/keyrings/helm.asc
     mode: '0644'
-  when: "'k8s_master' in group_names"
+  when: "'k8s_control_plain' in group_names"
 
 - name: Print OS architecture
   ansible.builtin.shell:
     cmd: dpkg --print-architecture
   register: os_arch
-  when: "'k8s_master' in group_names"
+  when: "'k8s_control_plain' in group_names"
 
 - name: Add Helm repository 
   ansible.builtin.apt_repository:
-    repo: "deb [arch={{ os_arch.stdout }} signed-by=/etc/apt/keyrings/helm.asc] https://baltocdn.com/helm/stable/debian/ all main"
+    repo: "deb [arch={{ os_arch.stdout }} signed-by=/etc/apt/keyrings/helm.asc] https://packages.buildkite.com/helm-linux/helm-debian/any/ any main"
     filename: helm-stable
     mode: '0644'
     update_cache: yes
-  when: "'k8s_master' in group_names"
+  when: "'k8s_control_plain' in group_names"
 
 - name: Install Helm packages
   ansible.builtin.apt:
     name: helm
     state: present
     update_cache: yes
-  when: "'k8s_master' in group_names"
+  when: "'k8s_control_plain' in group_names"
