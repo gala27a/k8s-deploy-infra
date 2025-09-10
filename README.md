@@ -6,16 +6,16 @@
 
 Name                     | Version              |
 -------------------------|----------------------|
-Kubernetes               | 1.30.12<br>1.31.8<br>1.32.4      |
-Containerd               | 1.7.27<br>2.0.5       |
-RunC                     | 1.1.15<br>1.2.6       |
-CNI                      | 1.5.1<br>1.6.2        |
-Calico                   | 3.28.4<br>3.29.3      |
-MetalLB                  | 0.14.9               |
-Ingress NGINX Controller | 1.11.5<br>1.12.1      |
+Kubernetes               | 1.30.14<br>1.31.13<br>1.32.9      |
+Containerd               | 1.7.28<br>2.0.6       |
+RunC                     | 1.1.15<br>1.2.7       |
+CNI                      | 1.5.1<br>1.6.2<br>1.7.1        |
+Calico                   | 3.28.5<br>3.29.5      |
+MetalLB                  | 0.14.9<br>0.15.2               |
+Ingress NGINX Controller | 1.11.8<br>1.12.6      |
 NFS CSI driver           | 4.11.0(Chart 4.11.0)   |
-Cert-manager             | 1.16.5<br>1.17.2        |
-Metrics-server           | 0.7.2(Chart 3.12.2)  |
+Cert-manager             | 1.16.5<br>1.17.4      |
+Metrics-server           | 0.8.0(Chart 3.13.0)  |
 
 
 
@@ -23,7 +23,7 @@ Metrics-server           | 0.7.2(Chart 3.12.2)  |
 
 #### Kubernetes host:
 - Ubuntu Server 22.04.5 LTS (Jammy Jellyfish)
-- Ubuntu Server 24.04.2 LTS (Noble Numbat)
+- Ubuntu Server 24.04.3 LTS (Noble Numbat)
 
 #### Ansible host:
 ```console
