@@ -16,6 +16,7 @@
     dest: /usr/local
     remote_src: yes
   when: containerd_check.stat.exists == false
+  timeout: 40
 
 - name: Get service Continerd
   ansible.builtin.get_url:
@@ -49,6 +50,7 @@
     url: https://github.com/opencontainers/runc/releases/download/v{{ runc_ver }}/runc.amd64
     dest: /usr/local/sbin/runc
     mode: '0755'
+    timeout: 30
 
 - name: Create CNI directory
   ansible.builtin.file:
@@ -62,6 +64,7 @@
     remote_src: yes
     owner: root
     group: root
+  timeout: 40
 
 - name: Start containerd service
   ansible.builtin.service:

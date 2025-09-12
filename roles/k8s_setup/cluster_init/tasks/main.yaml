@@ -22,16 +22,22 @@
 
 - name: Create directory for Kubernetes admin config
   ansible.builtin.file:
-    path: /root/.kube
+    path: /{{ item }}/.kube
     state: directory
     owner: root
     group: root
+  loop:
+    - root
+    - k8sadmin
   when: "'k8s_master' in group_names and kube_init_cp.changed"
 
 - name: Copy Kubernetes admin config
   ansible.builtin.copy:
     src: /etc/kubernetes/admin.conf
-    dest: /root/.kube/config
+    dest: /{{ item }}/.kube/config
     remote_src: yes
+  loop:
+    - root
+    - k8sadmin
   when: "'k8s_master' in group_names and kube_init_cp.changed"
   
