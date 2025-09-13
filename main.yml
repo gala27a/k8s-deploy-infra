@@ -2,20 +2,20 @@
 - hosts: all
   become: yes
   roles:
-    - os_base
-    - k8s-repository
-    - helm
-    - k8s-pre_requirements
-    - containerd
-    - k8s_setup/cluster_init
-    - k8s_setup/control_plain-node
-    - k8s_setup/worker-node
-    - k8s_setup/cni_calico
-    - lb_metallb
-    - ingress_nginx_controller
-    - csi_nfs_driver
-    - k8s_apps/cert_manager
-    - k8s_apps/metrics-server
+    - os/os_base
+    - k8s/pre_requirements
+    - os/containerd
+    - k8s/repos
+    - k8s/helm_client
+    - bootstrap/cluster_init
+    - network/calico
+    - bootstrap/control_plane_node
+    - bootstrap/worker_node
+    - network/metallb
+    - ingress/ingress_nginx
+    - storage/nfs_csi
+    - ingress/cert_manager
+    - k8s/metrics_server
 
 
 ### Group Variables --> group_vars/all.yml
